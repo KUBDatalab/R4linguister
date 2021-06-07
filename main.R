@@ -2,7 +2,7 @@
 
 Det allerførste:
   
-install.packages("tidyverse")
+  install.packages("tidyverse")
 
 # R er et generelt programmeringssprog. Det kan alt. Men det er særligt velegnet
 # til statistik. I bred forstand
@@ -33,7 +33,7 @@ install.packages("tidyverse")
 # gemme resultatet af en beregning, og arbejde videre med det.
 
 # Det kan vi gøre ved at gemme resultatet af vores regnestykke i en variabel:
-  
+
 a <- 1 + 1
 
 # og så ctrl+enter - det er sidste gang jeg skriver det - antag at det optræder
@@ -73,7 +73,7 @@ c <- c(1,2,3,4)
 # bliver så assignet til variabel-navnet c
 
 # Vi kan også lave matematik på de her vektorer:
-  
+
 c + 1
 
 
@@ -82,7 +82,7 @@ c + 1
 
 # En funktion der kunne arbejde på en vektor kunne være en beregning af en 
 # middelværdi:
-  
+
 mean(c)
 
 # Der er en kortere måde at få vektoren med tallene fra 1 til 4:
@@ -90,7 +90,7 @@ mean(c)
 
 # Vi arbejder med statistik. På virkeligheden. Og undertiden mangler vi 
 # simpelthen data. Det angiver R på en bestemt måde:
-  
+
 NA
 
 # Lad os tilføje en NA-værdi til vores vektor c:
@@ -98,7 +98,7 @@ NA
 c <- c(c, NA)
 
 # Hvad sker der så når vi beregner middelværdien?
-  
+
 mean(c)
 
 # Det er fordi der er en observation der kunne være hvad som helst.
@@ -110,7 +110,7 @@ mean(c)
 ?mean
 
 # Og ovre i help, får vi så manualen. Og vi kan se at vi kan skrive:
-  
+
 mean(c, na.rm=T)
 
 # na.rm = T er et argument til funktionen. En parameter, der fortæller funktionen
@@ -185,15 +185,15 @@ c[c > 2]
 # det er meget fint. Men normalt har vi jo mange data. I tabeller. Og der er 
 # både tekst og tal. Og vi kunne kun have en slags data i en vektor. Så hvad 
 # gør man?
-  
+
 # Den struktur vi arbejder med hedder "dataframes"
 
 # Lad os tage et eksempel:
-  
+
 mtcars
 
 # Ikke specielt overskueligt:
-    
+
 View(mtcars)
 
 # Meget bedre! Række - med observationer. Kolonner - det er vores variable  
@@ -223,7 +223,7 @@ mtcars$c("cyl", "mpg")
 mtcars[,c("cyl","mpg")]
 
 # Funktioner virker:
-  
+
 mean(mtcars$mpg)
 
 # Andre måder at subsette på?
@@ -264,11 +264,11 @@ library(dplyr)
 
 # Lige før ville vi godt have de to kolonnner cyl og mpg pillet ud af vores
 # datasæt:
-  
+
 mtcars[,c("cyl","mpg")]
 
 # Det kan vi nu, med dplyr installeret gøre fiksere:
-  
+
 select(mtcars, cyl, mpg)
 
 # Vi starter med at skrive den dataframe vi vil gøre ting ved som det første
@@ -277,11 +277,11 @@ select(mtcars, cyl, mpg)
 # Lad os lige gemme resultatet:
 
 cylindre_og_brændstoføkonomi <- select(mtcars, cyl, mpg)
-    
+
 # Nu vil vi så godt nøjes med at se på de bilver der har 8 cylindre:
 #   
 # Det er der også en funktion til. Den hedder filter:
-  
+
 filter(cylindre_og_brændstoføkonomi, cyl == 8)
 
 # Det gemmer vi også:
@@ -294,7 +294,7 @@ kort_variabel_navn <- filter(cylindre_og_brændstoføkonomi, cyl == 8)
 # Den funktion hedder summarise. Den skal have vores dataframe som vi 
 # lige lavede, og så skal den vide hvad vi vil gøre, her mean af mpg.
 # Vi kan også give resultatet et navn:
-  
+
 summarise(kort_variabel_navn, middel_øko = mean(mpg))
 
 # Det gemmer vi også:
@@ -353,6 +353,10 @@ mtcars %>%
 # Data kommer i mange formater. Her prøver vi med en excelfil.
 # R i sig selv kan godt. Men...
 library(readxl)
+Giver os en del ekstra muligheder. Der er et aber dabei. Den kan ikke indlæse 
+filer fra nettet. Det ville ellers være nyttigt. Så vi tager den i to trin:¨
+download.file("https://github.com/KUBDatalab/R4linguister/raw/main/eksempeldata.xlsx",
+              "eksempeldata.xlsx")
 data <- read_excel("eksempeldata.xlsx")
 # Lad os kigge på data:
 
@@ -416,9 +420,12 @@ table(data$Vokal, data$Socialklasse)
 # Men det er ret begrænsede muligheder man har. 
 
 # Det er baseret på andre data end dem vi har arbejdet med allerede. Så lad
-# os indlæse dem:
+# os indlæse dem. Her er det lettere. csv-filer kan indlæses direkte fra 
+# nettet!
 
-data2 <- read.csv("formant_table_arr_r", sep="\t")
+data2 <- read.csv2("https://github.com/KUBDatalab/R4linguister/raw/main/formanter_ny_r")
+
+
 
 # Men vi skulle plotte!
 
@@ -440,7 +447,7 @@ ggplot(data=data2)
 # Vi er grundlæggende ude efter et plot hvor der er noget på x aksen og noget 
 # andet på y-aksen. Og vi har noget data, der skal mappes til de to akser.
 # Det gør vi ved hjælp af en hjælpefunktion, aes()
-ggplot(data2 = data, mapping = aes(x=F2, y = F1))
+ggplot(data = data2, mapping = aes(x=F2, y = F1))
 
 # Det blev det ikke meget bedre af. Men vi har ikke fortalt hvad det egentlig
 # er vi vil have i plottet. Vi vil godt have punkter. Et scatterplot.
@@ -457,7 +464,7 @@ ggplot(data = data2, mapping = aes(x=F2, y = F1)) +
 
 ggplot(data2, aes(F2, F1)) +
   geom_text(aes(label = Vokal))
-str(data2)
+
 # Farver!
 ggplot(data2, aes(F2, F1)) +
   geom_text(aes(label = Vokal, color = Vokal))
@@ -484,7 +491,7 @@ ggplot(data2, aes(F2, F1)) +
 
 # Hov! theme_classic indeholder oplysninger om at signaturforklaringen skal være
 # der, og at den skal stå ude til højre. Så nu tilføjer vi den igen!
-  
+
 ggplot(data2, aes(F2, F1)) +
   geom_text(aes(label = Vokal, color = Vokal)) +
   scale_x_reverse(position = "top") +
@@ -503,7 +510,7 @@ ggplot(data2, aes(F2, F1)) +
   theme(legend.position = "none")  
 
 # Og hvor lange skal de være?
-  
+
 ggplot(data2, aes(F2, F1)) +
   geom_text(aes(label = Vokal, color = Vokal)) +
   scale_x_reverse(position = "top", 
@@ -629,18 +636,18 @@ data %>%
 # kolonne med overskriften "formant", og værdierne samles i en kolonne
 # med overskriften "frekvens".
 # Nu er vi klar til at plotte:
-  data %>% 
+data %>% 
   filter(Vokal == "a") %>% 
   group_by(Socialklasse) %>% 
   summarise(F1 = mean(F1), F2 = mean(F2)) %>% 
   pivot_longer(cols = c("F1", "F2"),
                names_to = "formant",
                values_to = "frekvens") %>% 
-    ggplot(aes(Socialklasse, frekvens)) + 
-    geom_col()
-  
+  ggplot(aes(Socialklasse, frekvens)) + 
+  geom_col()
+
 # Ikke specielt kønt, lad os få farvelagt efter formanten:
-    
+
 data %>% 
   filter(Vokal == "a") %>% 
   group_by(Socialklasse) %>% 
@@ -673,4 +680,3 @@ data %>%
 # Cheatsheets! https://www.rstudio.com/resources/cheatsheets/
 #   
 # Ekstra pakker til ekstra fancy ting i ggplot: http://www.ggplot2-exts.org/gallery/
-
